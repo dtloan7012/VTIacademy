@@ -88,16 +88,18 @@ HAVING  		COUNT(Account_id) = ( SELECT  		 COUNT(Account_id)
  -- Question 11: thống kê mỗi phòng ban có bao nhiêu dev, test, scrum master, PM 
 SELECT 			d.Department_name,p.Position_name, GROUP_CONCAT(a.Fullname), COUNT(p.Position_id)
 FROM			Department d 
-JOIN		`Account` a  ON	 d.Department_id = a.Department_id
-JOIN		`Position`p  ON  a.Position_id = p.Position_id
+JOIN			`Account` a  ON	 d.Department_id = a.Department_id
+JOIN			`Position`p  ON  a.Position_id = p.Position_id
 GROUP BY  		d.Department_id, p.Position_name ;
 
 -- Question 12: Lấy thông tin chi tiết của câu hỏi bao gồm: thông tin cơ bản của question, 
 -- loại câu hỏi, ai là người tạo ra câu hỏi, câu trả lời là gì, … Question 
-SELECT		q.Question_id, tq.Type_name, q.Content , a.Content,q.Creator_id, q.Create_date	
-FROM		TypeQuestion tq
-JOIN		Question q ON	tq.Type_id = q.Type_id
-JOIN		Answer a 	ON	q.Question_id = a.Question_id;
+SELECT		q.Question_id, q.Content, tq.Type_name, an.Content, a.Account_id, a.Fullname 
+FROM		Question q
+JOIN 		TypeQuestion tq 	ON	q.Type_id = tq.Type_id
+JOIN		Answer an    	ON an.Question_id = q.Question_id
+JOIN		 `Account` a		ON	a.Account_id = 	q.Creator_id;	
+
 
 -- Question 13: lấy ra số lượng câu hỏi của mỗi loại tự luận hay trắc nghiệm 
 SELECT 			Type_name, COUNT(Question_id)  
@@ -120,5 +122,35 @@ LEFT JOIN		Answer a    ON  q.Question_id = a.Question_id
 WHERE			a.Answer_id IS NULL
 GROUP BY        q.Content ;
 
+
+-- Question 17:  a) Lấy các account thuộc nhóm thứ 1
+			  -- b) Lấy các account thuộc nhóm thứ 2 
+			  -- c) Ghép 2 kết quả từ câu a) và câu b) sao cho không có record nào trùng nhau  
+SELECT			ga.Group_id, a.Fullname, a.Email, a.Account_id	 
+FROM			 `Account` a 
+JOIN			GroupAccount  ga  ON  a.Account_id = ga.Account_id
+WHERE           ga.Group_id = 1
+GROUP BY 		a.Fullname
+UNION  
+SELECT			ga.Group_id, a.Fullname, a.Email, a.Account_id	 
+FROM			 `Account` a 
+JOIN			GroupAccount  ga  ON  a.Account_id = ga.Account_id
+WHERE           ga.Group_id = 2
+GROUP BY 		a.Fullname ;
+
+-- Question 18:  a) Lấy các group có lớn hơn 2 thành viên
+			  -- b) Lấy các group có nhỏ hơn 5 thành viên 
+			  -- c) Ghép 2 kết quả từ câu a) và câu b) 
+SELECT     	g.Group_id, g.Group_name, COUNT(ga.Account_id)
+FROM		`Group` g 
+JOIN		 GroupAccount ga   ON  g.Group_id = ga.Group_id 
+GROUP BY  	 g.Group_id 
+HAVING        COUNT(ga.Account_id) > 2
+UNION 
+SELECT     	g.Group_id, g.Group_name, COUNT(ga.Account_id)
+FROM		`Group` g 
+JOIN		 GroupAccount ga   ON  g.Group_id = ga.Group_id 
+GROUP BY  	 g.Group_id 
+HAVING        COUNT(ga.Account_id)  < 5 ;
 
 
