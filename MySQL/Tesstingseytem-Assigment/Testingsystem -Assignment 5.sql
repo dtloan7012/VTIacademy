@@ -30,7 +30,7 @@ WHERE 					LENGTH(Content) > 12 ;
 SELECT * FROM 			V_Question;
 
 DELETE 					a 
-from					 answer a
+FROM					Answer a
 JOIN  					V_Question vq 	ON   a.Question_id = vq.Question_id ;
 
 DELETE 				  q

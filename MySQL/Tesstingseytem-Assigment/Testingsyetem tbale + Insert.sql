@@ -24,8 +24,8 @@ CREATE TABLE IF NOT EXISTS		 `Account`(
         Email			VARCHAR(50) NOT NULL UNIQUE,
         Username		VARCHAR(10) NOT NULL,
         Fullname  		NVARCHAR(30) NOT NULL,
-        Department_id 	TINYINT UNSIGNED NOT NULL ,
-        Position_id		TINYINT UNSIGNED NOT NULL ,
+        Department_id 	TINYINT UNSIGNED NOT NULL DEFAULT 11 ,
+        Position_id		TINYINT UNSIGNED NOT NULL DEFAULT 5 ,
         Create_date 	DATETIME DEFAULT NOW(),
         FOREIGN KEY (Department_id) REFERENCES Department (Department_id),
         FOREIGN KEY (Position_id) REFERENCES `Position`(Position_id)
@@ -73,7 +73,7 @@ CREATE TABLE IF NOT EXISTS  Question (
         Category_id  TINYINT UNSIGNED NOT NULL,
         Type_id      TINYINT UNSIGNED NOT NULL,
         Creator_id   TINYINT UNSIGNED NOT NULL,
-        Create_date  DATETIME DEFAULT NOW(),
+        Create_date  DATE,
         FOREIGN KEY (Type_id ) REFERENCES TypeQuestion (Type_id),
         FOREIGN KEY (Category_id) REFERENCES CategoryQuestion (Category_id)
 );
@@ -108,7 +108,7 @@ CREATE TABLE IF NOT EXISTS   ExamQuestion (
 		Exam_id     TINYINT UNSIGNED NOT NULL,
         Question_id TINYINT UNSIGNED NOT NULL,
         PRIMARY KEY (Exam_id, Question_id),
-		FOREIGN KEY (Exam_id) REFERENCES Exam (Exam_id),
+		FOREIGN KEY (Exam_id) REFERENCES Exam (Exam_id) ON DELETE CASCADE,
         FOREIGN KEY (Question_id) REFERENCES Question (Question_id)
 );
 
@@ -174,7 +174,7 @@ INSERT INTO  	GroupAccount (  Group_id    ,    Account_id  )
                              (     5        ,       6        ),      -- 6
                              (     4        ,       8        ),      -- 7
                              (     2        ,       7        ),      -- 8
-                             (     5        ,       1       ),       -- 9
+                             (     5        ,       1        ),       -- 9
                              (     3        ,       9        );      -- 10
                              
 -- Create TypeQuestion Table --
@@ -201,16 +201,16 @@ VALUES                         (    'JAVA'      ),
                                ( 'Ruby là gì'  );
                                
 -- Create Question Table --
-INSERT INTO 		Question   (   Content      ,   Category_id  ,   Type_id    ,   Creator_id   )
-VALUES                         ( 'JAVA là gì ' ,       1        ,    1         ,      1         ),
-							   ( 'SQL là gì '  ,       2        ,    8         ,      2         ),
-                               ( '.NET là gì ' ,       3        ,    2         ,      4         ),
-                               ('Postman là gì',       4        ,    2         ,      3         ),
-					           ( 'HTML là gì'  ,  		5		,	 4         ,	  4			),
-                               (  'CSS là gì'  ,       6		,	 5         ,      1         ),
-                               ('JavaScript'   ,       7		,	 2         ,	  5			),
-                               ( 'C++ là gì?'  ,       8        ,    1         ,      1         ),
-                               ('Ruby là gì'   ,       9        ,    6         ,      2         );
+INSERT INTO 		Question   (   Content      ,   Category_id  ,   Type_id    ,   Creator_id  ,Create_date   )
+VALUES                         ( 'JAVA là gì ' ,       1        ,    1         ,      1        , '2019-01-20'	),
+							   ( 'SQL là gì '  ,       2        ,    8         ,      2        , '2019-02-20'	),
+                               ( '.NET là gì ' ,       3        ,    2         ,      4        , '2019-03-20'	),
+                               ('Postman là gì',       4        ,    2         ,      3        , '2019-04-20'	),
+					           ( 'HTML là gì'  ,  		5		,	 4         ,	  4		   , '2019-05-20'	),
+                               (  'CSS là gì'  ,       6		,	 5         ,      1        , '2019-05-20'	),
+                               ('JavaScript'   ,       7		,	 2         ,	  5		   , '2019-07-20'	),
+                               ( 'C++ là gì?'  ,       8        ,    1         ,      1        , '2019-09-20'	),
+                               ('Ruby là gì'   ,       9        ,    6         ,      2        , '2019-11-20'	);
                                
 -- Create Answer Table --
 INSERT INTO         Answer     (              Content                                                                                          , Question_id ,   isCorrect )
@@ -228,11 +228,11 @@ VALUES                         ('JAVA là một ngôn ngữ lập trình hướn
 -- Create Exam Table --
 INSERT INTO         Exam       (  `Code` ,     Title        ,    Category_id    ,   Duration          ,   Creator_id   )
 VALUES                         (12 		, 'Tốt nghiệp VTI'  ,         2         ,   		180      ,      1         ),    -- 1`
-                               (13 		, 'Tốt nghiệp VTI'  ,         1         ,  	        80      ,      3         ),     -- 2
-                               (14 		, 'Tốt nghiệp VTI'  ,         4         ,   	    40      ,      4         ),     -- 3                               (15  	, 'Tốt nghiệp VTI'  ,         3         ,   		90       ,      2         ),
+                               (13 		, 'Tốt nghiệp VTI'  ,         1         ,  	        80      ,     	3         ),    -- 2
+                               (14 		, 'Tốt nghiệp VTI'  ,         4         ,   	    40      ,       4         ),    -- 3                               (15  	, 'Tốt nghiệp VTI'  ,         3         ,   		90       ,      2         ),
                                (16  	, 'Tốt nghiệp VTI'  ,         2         ,   		60       ,      2         ),	-- 4
                                (17  	, 'Tốt nghiệp VTI'  ,         2         ,   		90       ,      1         ), 	-- 5
-                               (18      , 'Tốt nghiệp VTI'  ,         3         ,   		60      ,      2         ),		-- 6
+                               (18      , 'Tốt nghiệp VTI'  ,         3         ,   		60      ,       2         ),	-- 6
                                (19  	, 'Tốt nghiệp VTI'  ,         1         ,   		90       ,      3         ),	-- 7
                                (20  	, 'Tốt nghiệp VTI'  ,         3         ,   		140      ,      2         );	-- 8
 

@@ -49,7 +49,7 @@ JOIN			Question q 		ON		c.Category_id =q.Category_id
 GROUP BY		Content ;
 
 -- Question 7: Thông kê mỗi Question được sử dụng trong bao nhiêu Exam
-SELECT 		 Question_id, COUNT(e.Exam_id) 
+SELECT 		 Question_id, COUNT(e.Exam_id) AS So_Exam
 FROM		Exam e
 JOIN		ExamQuestion eq ON  e.Exam_id = eq.Exam_id
 GROUP BY 	Question_id ; 
@@ -86,7 +86,7 @@ HAVING  		COUNT(Account_id) = ( SELECT  		 COUNT(Account_id)
 									ORDER BY     	COUNT(Account_id) ASC LIMIT 1
 																		);					
  -- Question 11: thống kê mỗi phòng ban có bao nhiêu dev, test, scrum master, PM 
-SELECT 			d.Department_name,p.Position_name, GROUP_CONCAT(a.Fullname), COUNT(p.Position_id)
+SELECT 			p.Position_name, GROUP_CONCAT(a.Fullname) AS FullName , COUNT(p.Position_id) AS So_nguoi
 FROM			Department d 
 JOIN			`Account` a  ON	 d.Department_id = a.Department_id
 JOIN			`Position`p  ON  a.Position_id = p.Position_id
